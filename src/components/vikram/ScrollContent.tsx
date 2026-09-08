@@ -1,10 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ScrollContent() {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const [selectedCombo, setSelectedCombo] = useState<{ name: string; price: string; img: string } | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedCombo(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const slider = sliderRef.current;
@@ -164,7 +175,7 @@ export default function ScrollContent() {
         </div>
       </section>
 
-      {/* SECTION: GIFT BOXES */}
+      {/* SECTION: GRAND DIWALI COMBO */}
       <section id="gift-boxes" className="flex min-h-screen flex-col justify-center px-6 py-24 md:px-24 bg-black/60 backdrop-blur-md border-t border-white/10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -173,21 +184,28 @@ export default function ScrollContent() {
           className="pointer-events-auto w-full max-w-7xl mx-auto"
         >
           <div className="text-center mb-16">
-            <h3 className="mb-4 text-4xl font-bold text-white uppercase">
-              Gift Boxes
+            <h3 className="mb-4 text-4xl font-bold text-white uppercase tracking-wider">
+              Grand Diwali Combo
             </h3>
-            <p className="text-lg text-white/70">Our special combo boxes for all your celebration needs.</p>
+            <p className="text-lg text-white/70">Our special combo boxes for all your celebration needs. Click to view combo details.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {giftBoxes.map((box, idx) => (
-              <div key={idx} className="group flex flex-col bg-[#111] border border-[#333] rounded-lg transition-all hover:border-[#cca052] cursor-pointer overflow-hidden">
+              <div 
+                key={idx} 
+                onClick={() => setSelectedCombo(box)}
+                className="group flex flex-col bg-[#111] border border-[#333] rounded-lg transition-all hover:border-[#cca052] cursor-pointer overflow-hidden shadow-lg hover:shadow-[0_0_20px_rgba(204,160,82,0.2)]"
+              >
                 <div className="relative h-80 w-full overflow-hidden bg-white flex items-center justify-center p-4">
                   <img 
                     src={box.img} 
                     alt={box.name} 
                     className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="bg-[#cca052] text-black font-bold px-4 py-2 rounded shadow-md text-sm uppercase tracking-wider">🔍 Click to View</span>
+                  </div>
                 </div>
                 <div className="p-6 text-center flex-1 flex flex-col justify-between">
                   <div>
@@ -195,8 +213,15 @@ export default function ScrollContent() {
                   </div>
                   <div>
                     <p className="text-[#cca052] font-bold text-2xl mb-6">{box.price}</p>
-                    <button className="w-full bg-[#cca052] py-3 text-lg font-bold text-black rounded hover:bg-white transition-colors">
-                      Add to Cart
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedCombo(box);
+                      }}
+                      className="w-full bg-[#cca052] py-3 text-lg font-bold text-black rounded hover:bg-white transition-colors uppercase tracking-wider flex items-center justify-center gap-2"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                      View Combo
                     </button>
                   </div>
                 </div>
@@ -386,6 +411,78 @@ export default function ScrollContent() {
           </div>
         </div>
       </section>
+
+
+      {/* FULLSCREEN COMBO IMAGE MODAL */}
+      {selectedCombo && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/92 backdrop-blur-md flex flex-col items-center justify-between p-4 md:p-8 pointer-events-auto animate-in fade-in duration-200"
+          onClick={() => setSelectedCombo(null)}
+        >
+          {/* Header Bar */}
+          <div 
+            className="w-full max-w-6xl flex items-center justify-between py-3 px-4 border-b border-white/20 bg-black/40 rounded-t-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-[#cca052] font-bold text-xl md:text-3xl tracking-wide">{selectedCombo.name}</span>
+              <span className="bg-[#cca052]/20 text-[#cca052] px-3 py-1 rounded-full font-bold text-sm md:text-lg border border-[#cca052]/40">
+                {selectedCombo.price}
+              </span>
+            </div>
+            
+            <button 
+              onClick={() => setSelectedCombo(null)}
+              className="flex items-center gap-2 bg-[#cca052] hover:bg-white text-black font-bold px-4 py-2 rounded-lg transition-all text-sm md:text-base shadow-lg cursor-pointer"
+              title="Close Fullscreen View"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              Close
+            </button>
+          </div>
+
+          {/* Image Container */}
+          <div 
+            className="relative flex-1 w-full max-w-6xl my-4 flex items-center justify-center overflow-auto p-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img 
+              src={selectedCombo.img} 
+              alt={selectedCombo.name} 
+              className="max-w-full max-h-[75vh] md:max-h-[80vh] object-contain rounded-lg shadow-[0_0_40px_rgba(204,160,82,0.3)] border border-[#cca052]/40"
+            />
+          </div>
+
+          {/* Footer Bar */}
+          <div 
+            className="w-full max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4 py-3 px-4 border-t border-white/20 bg-black/40 rounded-b-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-white/70 text-xs md:text-sm text-center sm:text-left">
+              💡 Tip: Click anywhere outside the box or press Esc to return to website.
+            </p>
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
+              <a 
+                href="https://mybillbook.in/store/vikramtrader" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-[#cca052] hover:bg-white text-black font-bold px-6 py-2.5 rounded-lg transition-all text-sm md:text-base flex items-center justify-center gap-2 shadow-md uppercase tracking-wider"
+              >
+                Order This Combo
+              </a>
+              <button 
+                onClick={() => setSelectedCombo(null)}
+                className="bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-2.5 rounded-lg transition-all text-sm md:text-base border border-white/20 uppercase tracking-wider cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <nav className="hidden md:flex items-center gap-8 text-xs font-semibold tracking-widest text-white/50 uppercase">
           <a href="#home" className="hover:text-white transition-colors">Home</a>
           <a href="#about" className="hover:text-white transition-colors">Heritage</a>
-          <a href="#gift-boxes" className="hover:text-white transition-colors">Collections</a>
+          <a href="#gift-boxes" className="hover:text-white transition-colors">Diwali Combos</a>
           <a href="#categories" className="hover:text-white transition-colors">Categories</a>
           <a href="#payment" className="hover:text-white transition-colors">Payment</a>
           <a href="#safety" className="hover:text-white transition-colors">Safety Tips</a>
@@ -43,7 +43,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <nav className="flex flex-col items-center gap-8 text-sm font-semibold tracking-widest text-white uppercase">
           <a href="#home" onClick={() => setMenuOpen(false)} className="hover:text-[#cca052] transition-colors">Home</a>
           <a href="#about" onClick={() => setMenuOpen(false)} className="hover:text-[#cca052] transition-colors">Heritage</a>
-          <a href="#gift-boxes" onClick={() => setMenuOpen(false)} className="hover:text-[#cca052] transition-colors">Collections</a>
+          <a href="#gift-boxes" onClick={() => setMenuOpen(false)} className="hover:text-[#cca052] transition-colors">Diwali Combos</a>
           <a href="#categories" onClick={() => setMenuOpen(false)} className="hover:text-[#cca052] transition-colors">Categories</a>
           <a href="#payment" onClick={() => setMenuOpen(false)} className="hover:text-[#cca052] transition-colors">Payment</a>
           <a href="#safety" onClick={() => setMenuOpen(false)} className="hover:text-[#cca052] transition-colors">Safety Tips</a>
