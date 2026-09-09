@@ -5,17 +5,30 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ScrollContent() {
   const sliderRef = useRef<HTMLDivElement>(null);
+  const ownProductsSliderRef = useRef<HTMLDivElement>(null);
   const [selectedCombo, setSelectedCombo] = useState<{ name: string; price: string; img: string } | null>(null);
+  const [selectedProductIndex, setSelectedProductIndex] = useState<number | null>(null);
+
+  const ownProducts = Array.from({ length: 22 }, (_, i) => ({
+    id: i + 1,
+    name: `Our Product #${i + 1}`,
+    img: `/images/${i + 1}.jpeg`
+  }));
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setSelectedCombo(null);
+        setSelectedProductIndex(null);
+      } else if (e.key === "ArrowLeft") {
+        setSelectedProductIndex((prev) => (prev !== null ? (prev > 0 ? prev - 1 : ownProducts.length - 1) : null));
+      } else if (e.key === "ArrowRight") {
+        setSelectedProductIndex((prev) => (prev !== null ? (prev < ownProducts.length - 1 ? prev + 1 : 0) : null));
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [ownProducts.length]);
 
   useEffect(() => {
     const slider = sliderRef.current;
@@ -58,6 +71,56 @@ export default function ScrollContent() {
       slider.removeEventListener('touchend', resume);
     };
   }, []);
+
+  useEffect(() => {
+    const slider = ownProductsSliderRef.current;
+    if (!slider) return;
+
+    let autoScroll = setInterval(scrollNext, 3500);
+
+    function scrollNext() {
+      if (!slider) return;
+      const firstChild = slider.firstElementChild;
+      if (!firstChild) return;
+      
+      const cardWidth = firstChild.clientWidth + 24; 
+      const maxScroll = slider.scrollWidth - slider.clientWidth;
+      
+      if (slider.scrollLeft >= maxScroll - 10) {
+        slider.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        slider.scrollTo({ left: slider.scrollLeft + cardWidth, behavior: 'smooth' });
+      }
+    }
+
+    const pause = () => clearInterval(autoScroll);
+    const resume = () => {
+      clearInterval(autoScroll);
+      autoScroll = setInterval(scrollNext, 3500);
+    };
+
+    slider.addEventListener('mouseenter', pause);
+    slider.addEventListener('mouseleave', resume);
+    slider.addEventListener('touchstart', pause, { passive: true });
+    slider.addEventListener('touchend', resume, { passive: true });
+
+    return () => {
+      clearInterval(autoScroll);
+      slider.removeEventListener('mouseenter', pause);
+      slider.removeEventListener('mouseleave', resume);
+      slider.removeEventListener('touchstart', pause);
+      slider.removeEventListener('touchend', resume);
+    };
+  }, []);
+
+  const scrollOwnProducts = (direction: 'left' | 'right') => {
+    const slider = ownProductsSliderRef.current;
+    if (!slider) return;
+    const firstChild = slider.firstElementChild;
+    if (!firstChild) return;
+    const scrollAmount = (firstChild.clientWidth + 24) * 2;
+    slider.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+  };
   const giftBoxes = [
     { name: "Mega Box", price: "₹4,000", img: "https://delightful-sunflower-64e073.netlify.app/images/WhatsApp%20Image%202026-08-12%20at%203.59.13%20PM.jpeg" },
     { name: "Jumbo Box", price: "₹4,500", img: "https://delightful-sunflower-64e073.netlify.app/images/WhatsApp%20Image%202026-08-12%20at%203.59.12%20PM.jpeg" },
@@ -224,6 +287,100 @@ export default function ScrollContent() {
                       View Combo
                     </button>
                   </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* SECTION: OUR OWN PRODUCTS SLIDER */}
+      <section id="our-products" className="flex flex-col justify-center px-6 py-24 bg-black/60 backdrop-blur-md border-t border-white/10 relative">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="pointer-events-auto w-full max-w-7xl mx-auto overflow-hidden"
+        >
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+              <div className="inline-flex items-center gap-2 border border-[#cca052]/40 rounded-full px-3.5 py-1 mb-3 bg-[#cca052]/10 backdrop-blur-sm">
+                <span className="text-[#cca052] text-xs font-bold tracking-widest uppercase">✨ Exclusive Sivakasi Manufacture</span>
+              </div>
+              <h3 className="text-4xl font-bold text-white uppercase tracking-wider">
+                Our Own Products
+              </h3>
+              <p className="text-lg text-white/70 mt-2">Explore our signature range of genuine Sivakasi fireworks and crackers.</p>
+            </div>
+            
+            {/* Slider Navigation Buttons */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => scrollOwnProducts('left')}
+                className="w-12 h-12 rounded-full border border-[#cca052]/50 bg-black/60 text-[#cca052] hover:bg-[#cca052] hover:text-black transition-all flex items-center justify-center shadow-lg active:scale-95 cursor-pointer"
+                title="Scroll Left"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              <button
+                onClick={() => scrollOwnProducts('right')}
+                className="w-12 h-12 rounded-full border border-[#cca052]/50 bg-black/60 text-[#cca052] hover:bg-[#cca052] hover:text-black transition-all flex items-center justify-center shadow-lg active:scale-95 cursor-pointer"
+                title="Scroll Right"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Slider Row */}
+          <div 
+            ref={ownProductsSliderRef} 
+            className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar" 
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {ownProducts.map((prod, idx) => (
+              <div 
+                key={prod.id} 
+                onClick={() => setSelectedProductIndex(idx)}
+                className="snap-start shrink-0 w-64 md:w-80 group flex flex-col bg-[#111] border border-[#333] hover:border-[#cca052] rounded-xl transition-all duration-300 cursor-pointer overflow-hidden shadow-lg hover:shadow-[0_0_25px_rgba(204,160,82,0.25)] relative"
+              >
+                {/* Badge */}
+                <div className="absolute top-3 left-3 z-10 bg-[#cca052] text-black font-extrabold text-[11px] uppercase tracking-wider px-2.5 py-1 rounded shadow-md">
+                  Product #{prod.id}
+                </div>
+
+                {/* Image Box */}
+                <div className="h-64 md:h-72 w-full bg-white/95 flex items-center justify-center p-4 relative overflow-hidden">
+                  <img 
+                    src={prod.img} 
+                    alt={prod.name} 
+                    className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="bg-[#cca052] text-black font-bold text-xs uppercase tracking-wider px-4 py-2 rounded shadow-lg flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        <line x1="11" y1="8" x2="11" y2="14"></line>
+                        <line x1="8" y1="11" x2="14" y2="11"></line>
+                      </svg>
+                      Click to View
+                    </span>
+                  </div>
+                </div>
+
+                {/* Details */}
+                <div className="p-4 text-center bg-[#111] border-t border-white/5 flex items-center justify-between">
+                  <h4 className="text-base font-bold text-white group-hover:text-[#cca052] transition-colors">
+                    {prod.name}
+                  </h4>
+                  <span className="text-[10px] text-[#cca052] border border-[#cca052]/40 rounded px-2 py-0.5 font-semibold uppercase tracking-wider">
+                    Sivakasi Direct
+                  </span>
                 </div>
               </div>
             ))}
@@ -475,6 +632,107 @@ export default function ScrollContent() {
               </a>
               <button 
                 onClick={() => setSelectedCombo(null)}
+                className="bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-2.5 rounded-lg transition-all text-sm md:text-base border border-white/20 uppercase tracking-wider cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* FULLSCREEN PRODUCT LIGHTBOX MODAL */}
+      {selectedProductIndex !== null && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/92 backdrop-blur-md flex flex-col items-center justify-between p-4 md:p-8 pointer-events-auto animate-in fade-in duration-200"
+          onClick={() => setSelectedProductIndex(null)}
+        >
+          {/* Header Bar */}
+          <div 
+            className="w-full max-w-6xl flex items-center justify-between py-3 px-4 border-b border-white/20 bg-black/40 rounded-t-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-[#cca052] font-bold text-xl md:text-3xl tracking-wide">
+                Our Product #{selectedProductIndex + 1}
+              </span>
+              <span className="bg-[#cca052]/20 text-[#cca052] px-3 py-1 rounded-full font-bold text-xs md:text-sm border border-[#cca052]/40 uppercase tracking-wider">
+                Item {selectedProductIndex + 1} of {ownProducts.length}
+              </span>
+            </div>
+            
+            <button 
+              onClick={() => setSelectedProductIndex(null)}
+              className="flex items-center gap-2 bg-[#cca052] hover:bg-white text-black font-bold px-4 py-2 rounded-lg transition-all text-sm md:text-base shadow-lg cursor-pointer"
+              title="Close Fullscreen View"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              Close
+            </button>
+          </div>
+
+          {/* Image Container with Prev/Next Overlay Buttons */}
+          <div 
+            className="relative flex-1 w-full max-w-6xl my-4 flex items-center justify-between overflow-hidden p-2 gap-2 md:gap-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedProductIndex(selectedProductIndex > 0 ? selectedProductIndex - 1 : ownProducts.length - 1);
+              }}
+              className="z-10 w-12 h-12 md:w-14 md:h-14 rounded-full bg-black/80 border border-[#cca052]/60 text-[#cca052] hover:bg-[#cca052] hover:text-black transition-all flex items-center justify-center shadow-2xl shrink-0 cursor-pointer active:scale-95"
+              title="Previous Product (Left Arrow)"
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+
+            <div className="flex-1 flex items-center justify-center px-2 md:px-4 max-h-[70vh] md:max-h-[78vh]">
+              <img 
+                src={`/images/${selectedProductIndex + 1}.jpeg`} 
+                alt={`Product #${selectedProductIndex + 1}`} 
+                className="max-w-full max-h-[70vh] md:max-h-[78vh] object-contain rounded-lg shadow-[0_0_40px_rgba(204,160,82,0.35)] border border-[#cca052]/40"
+              />
+            </div>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedProductIndex(selectedProductIndex < ownProducts.length - 1 ? selectedProductIndex + 1 : 0);
+              }}
+              className="z-10 w-12 h-12 md:w-14 md:h-14 rounded-full bg-black/80 border border-[#cca052]/60 text-[#cca052] hover:bg-[#cca052] hover:text-black transition-all flex items-center justify-center shadow-2xl shrink-0 cursor-pointer active:scale-95"
+              title="Next Product (Right Arrow)"
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          {/* Footer Bar */}
+          <div 
+            className="w-full max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4 py-3 px-4 border-t border-white/20 bg-black/40 rounded-b-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p className="text-white/70 text-xs md:text-sm text-center sm:text-left">
+              💡 Tip: Use Left / Right arrow keys to switch images, Esc or Click outside to close.
+            </p>
+            <div className="flex items-center gap-3 w-full sm:w-auto justify-center">
+              <a 
+                href="https://mybillbook.in/store/vikramtrader" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-[#cca052] hover:bg-white text-black font-bold px-6 py-2.5 rounded-lg transition-all text-sm md:text-base flex items-center justify-center gap-2 shadow-md uppercase tracking-wider"
+              >
+                Order This Product
+              </a>
+              <button 
+                onClick={() => setSelectedProductIndex(null)}
                 className="bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-2.5 rounded-lg transition-all text-sm md:text-base border border-white/20 uppercase tracking-wider cursor-pointer"
               >
                 Close
