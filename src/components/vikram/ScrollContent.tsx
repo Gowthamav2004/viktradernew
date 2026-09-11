@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ScrollContent() {
   const sliderRef = useRef<HTMLDivElement>(null);
-  const ownProductsSliderRef = useRef<HTMLDivElement>(null);
   const [selectedCombo, setSelectedCombo] = useState<{ name: string; price: string; img: string } | null>(null);
   const [selectedProductIndex, setSelectedProductIndex] = useState<number | null>(null);
 
@@ -72,55 +71,7 @@ export default function ScrollContent() {
     };
   }, []);
 
-  useEffect(() => {
-    const slider = ownProductsSliderRef.current;
-    if (!slider) return;
 
-    let autoScroll = setInterval(scrollNext, 3500);
-
-    function scrollNext() {
-      if (!slider) return;
-      const firstChild = slider.firstElementChild;
-      if (!firstChild) return;
-      
-      const cardWidth = firstChild.clientWidth + 24; 
-      const maxScroll = slider.scrollWidth - slider.clientWidth;
-      
-      if (slider.scrollLeft >= maxScroll - 10) {
-        slider.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        slider.scrollTo({ left: slider.scrollLeft + cardWidth, behavior: 'smooth' });
-      }
-    }
-
-    const pause = () => clearInterval(autoScroll);
-    const resume = () => {
-      clearInterval(autoScroll);
-      autoScroll = setInterval(scrollNext, 3500);
-    };
-
-    slider.addEventListener('mouseenter', pause);
-    slider.addEventListener('mouseleave', resume);
-    slider.addEventListener('touchstart', pause, { passive: true });
-    slider.addEventListener('touchend', resume, { passive: true });
-
-    return () => {
-      clearInterval(autoScroll);
-      slider.removeEventListener('mouseenter', pause);
-      slider.removeEventListener('mouseleave', resume);
-      slider.removeEventListener('touchstart', pause);
-      slider.removeEventListener('touchend', resume);
-    };
-  }, []);
-
-  const scrollOwnProducts = (direction: 'left' | 'right') => {
-    const slider = ownProductsSliderRef.current;
-    if (!slider) return;
-    const firstChild = slider.firstElementChild;
-    if (!firstChild) return;
-    const scrollAmount = (firstChild.clientWidth + 24) * 2;
-    slider.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
-  };
   const giftBoxes = [
     { name: "Mega Box", price: "₹4,000", img: "https://delightful-sunflower-64e073.netlify.app/images/WhatsApp%20Image%202026-08-12%20at%203.59.13%20PM.jpeg" },
     { name: "Jumbo Box", price: "₹4,500", img: "https://delightful-sunflower-64e073.netlify.app/images/WhatsApp%20Image%202026-08-12%20at%203.59.12%20PM.jpeg" },
@@ -294,93 +245,56 @@ export default function ScrollContent() {
         </motion.div>
       </section>
 
-      {/* SECTION: OUR OWN PRODUCTS SLIDER */}
+      {/* SECTION: OUR OWN PRODUCTS GRID */}
       <section id="our-products" className="flex flex-col justify-center px-6 py-24 bg-black/60 backdrop-blur-md border-t border-white/10 relative">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="pointer-events-auto w-full max-w-7xl mx-auto overflow-hidden"
+          className="pointer-events-auto w-full max-w-7xl mx-auto"
         >
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-            <div>
-              <div className="inline-flex items-center gap-2 border border-[#cca052]/40 rounded-full px-3.5 py-1 mb-3 bg-[#cca052]/10 backdrop-blur-sm">
-                <span className="text-[#cca052] text-xs font-bold tracking-widest uppercase">✨ Exclusive Sivakasi Manufacture</span>
-              </div>
-              <h3 className="text-4xl font-bold text-white uppercase tracking-wider">
-                Our Own Products
-              </h3>
-              <p className="text-lg text-white/70 mt-2">Explore our signature range of genuine Sivakasi fireworks and crackers.</p>
-            </div>
-            
-            {/* Slider Navigation Buttons */}
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => scrollOwnProducts('left')}
-                className="w-12 h-12 rounded-full border border-[#cca052]/50 bg-black/60 text-[#cca052] hover:bg-[#cca052] hover:text-black transition-all flex items-center justify-center shadow-lg active:scale-95 cursor-pointer"
-                title="Scroll Left"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-              </button>
-              <button
-                onClick={() => scrollOwnProducts('right')}
-                className="w-12 h-12 rounded-full border border-[#cca052]/50 bg-black/60 text-[#cca052] hover:bg-[#cca052] hover:text-black transition-all flex items-center justify-center shadow-lg active:scale-95 cursor-pointer"
-                title="Scroll Right"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </button>
-            </div>
+          <div className="mb-12">
+            <h3 className="flex flex-col">
+              <span className="text-2xl md:text-3xl font-light text-white mb-1">Our</span>
+              <span className="text-4xl md:text-5xl font-extrabold text-[#cca052] uppercase tracking-wider">
+                Own Products
+              </span>
+            </h3>
           </div>
 
-          {/* Slider Row */}
-          <div 
-            ref={ownProductsSliderRef} 
-            className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory hide-scrollbar" 
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
+          {/* Grid Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {ownProducts.map((prod, idx) => (
               <div 
                 key={prod.id} 
                 onClick={() => setSelectedProductIndex(idx)}
-                className="snap-start shrink-0 w-64 md:w-80 group flex flex-col bg-[#111] border border-[#333] hover:border-[#cca052] rounded-xl transition-all duration-300 cursor-pointer overflow-hidden shadow-lg hover:shadow-[0_0_25px_rgba(204,160,82,0.25)] relative"
+                className="group flex flex-col bg-[#111] border border-[#333] hover:border-[#cca052] rounded-xl transition-all duration-300 cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(204,160,82,0.25)] p-6 relative overflow-hidden"
               >
-                {/* Badge */}
-                <div className="absolute top-3 left-3 z-10 bg-[#cca052] text-black font-extrabold text-[11px] uppercase tracking-wider px-2.5 py-1 rounded shadow-md">
-                  Product #{prod.id}
-                </div>
-
                 {/* Image Box */}
-                <div className="h-64 md:h-72 w-full bg-white/95 flex items-center justify-center p-4 relative overflow-hidden">
+                <div className="h-40 w-full bg-white rounded-lg flex items-center justify-center p-4 mb-5 relative">
                   <img 
                     src={prod.img} 
                     alt={prod.name} 
                     className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="bg-[#cca052] text-black font-bold text-xs uppercase tracking-wider px-4 py-2 rounded shadow-lg flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                    <span className="bg-[#cca052] text-black font-bold text-xs uppercase tracking-wider px-3 py-1.5 rounded shadow-lg flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         <line x1="11" y1="8" x2="11" y2="14"></line>
                         <line x1="8" y1="11" x2="14" y2="11"></line>
                       </svg>
-                      Click to View
+                      View
                     </span>
                   </div>
                 </div>
 
                 {/* Details */}
-                <div className="p-4 text-center bg-[#111] border-t border-white/5 flex items-center justify-between">
-                  <h4 className="text-base font-bold text-white group-hover:text-[#cca052] transition-colors">
+                <div className="text-center">
+                  <h4 className="text-sm md:text-base font-medium text-white/80 group-hover:text-[#cca052] transition-colors">
                     {prod.name}
                   </h4>
-                  <span className="text-[10px] text-[#cca052] border border-[#cca052]/40 rounded px-2 py-0.5 font-semibold uppercase tracking-wider">
-                    Sivakasi Direct
-                  </span>
                 </div>
               </div>
             ))}
