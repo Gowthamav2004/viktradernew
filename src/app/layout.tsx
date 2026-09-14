@@ -19,9 +19,9 @@ export const metadata: Metadata = {
     siteName: 'Vikram Traders',
     images: [
       {
-        url: '/images/logo.png',
-        width: 1200,
-        height: 630,
+        url: '/og-image.jpg',
+        width: 600,
+        height: 600,
         alt: 'Vikram Traders',
       },
     ],
