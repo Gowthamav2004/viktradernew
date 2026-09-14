@@ -462,20 +462,39 @@ export default function ScrollContent() {
       </section>
 
       {/* SECTION: FOOTER */}
-      <section id="contact" className="flex flex-col items-center justify-center px-6 py-32 text-center pointer-events-auto bg-black/50 backdrop-blur-sm border-t border-white/10">
-        <h3 className="mb-6 text-4xl font-bold text-white uppercase">
-          Ready to Order?
-        </h3>
-        <p className="mb-10 text-xl text-white/70">
-          Message us on WhatsApp for fast dispatch and delivery.
-        </p>
-        <a href="https://wa.me/919655656041" target="_blank" rel="noopener noreferrer" className="relative z-50 pointer-events-auto bg-[#25D366] px-6 md:px-10 py-3 md:py-4 text-base md:text-lg w-full max-w-xs md:max-w-none md:w-auto font-bold text-white rounded transition-all hover:bg-[#128C7E] flex items-center gap-2 mx-auto inline-flex justify-center items-center">
-          WhatsApp Us
-        </a>
+      <section id="contact" className="flex flex-col items-center justify-center px-6 py-24 md:py-32 pointer-events-auto bg-black/50 backdrop-blur-sm border-t border-white/10">
         
-        <div className="mt-32 w-full max-w-5xl border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between text-sm text-white/50">
+        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-8 items-center mb-16 md:mb-24">
+          {/* Left Side: Order text & button */}
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+            <h3 className="mb-6 text-4xl font-bold text-white uppercase">
+              Ready to Order?
+            </h3>
+            <p className="mb-10 text-xl text-white/70">
+              Message us on WhatsApp for fast dispatch and delivery.
+            </p>
+            <a href="https://wa.me/919655656041" target="_blank" rel="noopener noreferrer" className="relative z-50 pointer-events-auto bg-[#25D366] px-6 md:px-10 py-3 md:py-4 text-base md:text-lg w-full max-w-xs md:max-w-none md:w-auto font-bold text-white rounded transition-all hover:bg-[#128C7E] flex items-center gap-2 justify-center">
+              WhatsApp Us
+            </a>
+          </div>
+
+          {/* Right Side: Map Hyper Image */}
+          <div className="flex justify-center md:justify-end">
+            <a href="https://maps.app.goo.gl/q8Y3LppuomnuRPuL6" target="_blank" rel="noopener noreferrer" className="relative group block overflow-hidden rounded-xl border border-white/10 hover:border-[#cca052] transition-colors w-full max-w-md shadow-lg shadow-black/50">
+              <img src="/images/map-location.jpg" alt="Our Location in Sivakasi" className="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span className="bg-[#cca052] text-black font-bold px-4 py-2 rounded shadow-md text-sm uppercase tracking-wider flex items-center gap-2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                  View on Google Maps
+                </span>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+        <div className="w-full max-w-6xl border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center md:items-start text-sm text-white/50 text-center md:text-left gap-4 md:gap-0">
           <p>© 2026 Vikram Traders. All rights reserved.</p>
-          <div className="flex gap-6 mt-4 md:mt-0">
+          <div className="flex flex-wrap justify-center md:justify-end gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
             <a href="#" className="hover:text-white transition-colors">Safety Rules</a>
