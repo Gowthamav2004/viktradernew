@@ -431,9 +431,9 @@ export default function ScrollContent() {
                 After transferring, please share the transaction reference and a screenshot with us on WhatsApp so we can confirm and process your order right away.
               </p>
 
-              <button className="w-full bg-[#cca052] py-4 text-black font-bold rounded flex items-center justify-center gap-2 hover:bg-white transition-colors">
+              <a href="https://wa.me/919655656041" target="_blank" rel="noopener noreferrer" className="w-full bg-[#cca052] py-4 text-black font-bold rounded flex items-center justify-center gap-2 hover:bg-white transition-colors cursor-pointer">
                 <span>💬</span> Send Payment Screenshot on WhatsApp
-              </button>
+              </a>
             </div>
 
           </div>
