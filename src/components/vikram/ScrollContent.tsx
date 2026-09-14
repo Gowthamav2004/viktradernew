@@ -8,11 +8,22 @@ export default function ScrollContent() {
   const [selectedCombo, setSelectedCombo] = useState<{ name: string; price: string; img: string } | null>(null);
   const [selectedProductIndex, setSelectedProductIndex] = useState<number | null>(null);
 
-  const ownProducts = Array.from({ length: 22 }, (_, i) => ({
-    id: i + 1,
-    name: `Our Product #${i + 1}`,
-    img: `/images/${i + 1}.jpeg`
-  }));
+  const categorizedProductsData = [
+    { category: "Bomb", items: [1, 8, 9] },
+    { category: "Flower Pot - Ashoka", items: [2, 3] },
+    { category: "Flower Pot - Big", items: [13, 15] },
+    { category: "Flower Pot - Small", items: [20, 21] },
+    { category: "Flower Pot - Special", items: [4, 5] },
+    { category: "Flower Pot - Colour Koti", items: [14, 16, 17, 18, 19] },
+    { category: "Bijili", items: [10, 11, 12] },
+    { category: "Multicolour & Crackling Shots", items: [6, 7] }
+  ];
+
+  const ownProducts = categorizedProductsData.flatMap(cat => cat.items.map(id => ({
+    id,
+    img: `/images/${id}.jpeg`,
+    category: cat.category
+  })));
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -263,38 +274,45 @@ export default function ScrollContent() {
           </div>
 
           {/* Grid Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {ownProducts.map((prod, idx) => (
-              <div 
-                key={prod.id} 
-                onClick={() => setSelectedProductIndex(idx)}
-                className="group flex flex-col bg-[#111] border border-[#333] hover:border-[#cca052] rounded-xl transition-all duration-300 cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(204,160,82,0.25)] p-6 relative overflow-hidden"
-              >
-                {/* Image Box */}
-                <div className="h-40 w-full bg-white rounded-lg flex items-center justify-center p-4 mb-5 relative">
-                  <img 
-                    src={prod.img} 
-                    alt={prod.name} 
-                    className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
-                    <span className="bg-[#cca052] text-black font-bold text-xs uppercase tracking-wider px-3 py-1.5 rounded shadow-lg flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        <line x1="11" y1="8" x2="11" y2="14"></line>
-                        <line x1="8" y1="11" x2="14" y2="11"></line>
-                      </svg>
-                      View
-                    </span>
-                  </div>
-                </div>
-
-                {/* Details */}
-                <div className="text-center">
-                  <h4 className="text-sm md:text-base font-medium text-white/80 group-hover:text-[#cca052] transition-colors">
-                    {prod.name}
-                  </h4>
+          <div className="space-y-16">
+            {categorizedProductsData.map((categoryData, catIdx) => (
+              <div key={catIdx}>
+                <h4 className="text-xl md:text-2xl font-bold text-white mb-6 border-b border-white/10 pb-3 inline-block border-b-[#cca052]">
+                  {categoryData.category}
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+                  {categoryData.items.map((id) => {
+                    const globalIdx = ownProducts.findIndex(p => p.id === id);
+                    const prod = ownProducts[globalIdx];
+                    
+                    return (
+                      <div 
+                        key={id} 
+                        onClick={() => setSelectedProductIndex(globalIdx)}
+                        className="group flex flex-col bg-[#111] border border-[#333] hover:border-[#cca052] rounded-xl transition-all duration-300 cursor-pointer shadow-lg hover:shadow-[0_0_25px_rgba(204,160,82,0.25)] p-4 relative overflow-hidden"
+                      >
+                        {/* Image Box */}
+                        <div className="h-40 md:h-48 w-full bg-white rounded-lg flex items-center justify-center p-3 relative">
+                          <img 
+                            src={prod.img} 
+                            alt={`${categoryData.category} Item`} 
+                            className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                            <span className="bg-[#cca052] text-black font-bold text-xs uppercase tracking-wider px-3 py-1.5 rounded shadow-lg flex items-center gap-1.5 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                <line x1="11" y1="8" x2="11" y2="14"></line>
+                                <line x1="8" y1="11" x2="14" y2="11"></line>
+                              </svg>
+                              View
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ))}
@@ -587,7 +605,7 @@ export default function ScrollContent() {
           >
             <div className="flex items-center gap-3">
               <span className="text-[#cca052] font-bold text-xl md:text-3xl tracking-wide">
-                Our Product #{selectedProductIndex + 1}
+                {ownProducts[selectedProductIndex].category}
               </span>
               <span className="bg-[#cca052]/20 text-[#cca052] px-3 py-1 rounded-full font-bold text-xs md:text-sm border border-[#cca052]/40 uppercase tracking-wider">
                 Item {selectedProductIndex + 1} of {ownProducts.length}
@@ -627,8 +645,8 @@ export default function ScrollContent() {
 
             <div className="flex-1 flex items-center justify-center px-2 md:px-4 max-h-[70vh] md:max-h-[78vh]">
               <img 
-                src={`/images/${selectedProductIndex + 1}.jpeg`} 
-                alt={`Product #${selectedProductIndex + 1}`} 
+                src={ownProducts[selectedProductIndex].img} 
+                alt={`${ownProducts[selectedProductIndex].category} Product`} 
                 className="max-w-full max-h-[70vh] md:max-h-[78vh] object-contain rounded-lg shadow-[0_0_40px_rgba(204,160,82,0.35)] border border-[#cca052]/40"
               />
             </div>
