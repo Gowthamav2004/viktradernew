@@ -6,11 +6,28 @@ import Layout from "@/components/vikram/Layout";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.vikramtraders.online'),
   title: "Vikram Traders | High-End Sivakasi Fireworks",
   description: "Premium fireworks at direct factory prices.",
   icons: {
     icon: "/favicon.png",
-  }
+  },
+  openGraph: {
+    title: "Vikram Traders | High-End Sivakasi Fireworks",
+    description: "Premium fireworks at direct factory prices.",
+    url: 'https://www.vikramtraders.online',
+    siteName: 'Vikram Traders',
+    images: [
+      {
+        url: '/images/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Vikram Traders',
+      },
+    ],
+    locale: 'en_IN',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
