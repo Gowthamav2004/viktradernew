@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Vikram Traders | High-End Sivakasi Fireworks",
   description: "Premium fireworks at direct factory prices.",
   icons: {
-    icon: "/icon.png",
+    icon: "/favicon.png",
   }
 };
 
