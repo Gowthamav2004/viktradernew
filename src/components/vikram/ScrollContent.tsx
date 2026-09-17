@@ -216,18 +216,18 @@ export default function ScrollContent() {
             <p className="text-lg text-white/70">Our special combo boxes for all your celebration needs. Click to view combo details.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {giftBoxes.map((box, idx) => (
               <div 
                 key={idx} 
                 onClick={() => setSelectedCombo(box)}
                 className="group flex flex-col bg-[#111] border border-[#333] rounded-lg transition-all hover:border-[#cca052] cursor-pointer overflow-hidden shadow-lg hover:shadow-[0_0_20px_rgba(204,160,82,0.2)]"
               >
-                <div className="relative h-80 w-full overflow-hidden bg-white flex items-center justify-center p-4">
+                <div className="relative w-full overflow-hidden bg-black flex items-center justify-center">
                   <img 
                     src={box.img} 
                     alt={box.name} 
-                    className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-105"
+                    className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span className="bg-[#cca052] text-black font-bold px-4 py-2 rounded shadow-md text-sm uppercase tracking-wider">🔍 Click to View</span>
