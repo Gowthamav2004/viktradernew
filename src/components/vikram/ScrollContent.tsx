@@ -84,9 +84,10 @@ export default function ScrollContent() {
 
 
   const giftBoxes = [
-    { name: "Mega Box", price: "₹4,000", img: "https://delightful-sunflower-64e073.netlify.app/images/WhatsApp%20Image%202026-08-12%20at%203.59.13%20PM.jpeg" },
-    { name: "Jumbo Box", price: "₹4,500", img: "https://delightful-sunflower-64e073.netlify.app/images/WhatsApp%20Image%202026-08-12%20at%203.59.12%20PM.jpeg" },
-    { name: "Platinum Box", price: "₹5,000", img: "https://delightful-sunflower-64e073.netlify.app/images/WhatsApp%20Image%202026-08-12%20at%203.59.12%20PM%20(1).jpeg" }
+    { name: "Kids Pack", price: "₹3,500", img: "/images/3500.jpeg" },
+    { name: "Legend Pack", price: "₹5,000", img: "/images/5000.jpeg" },
+    { name: "Family Pack", price: "₹7,000", img: "/images/7000.jpeg" },
+    { name: "Royal Pack", price: "₹10,000", img: "/images/10000.jpeg" }
   ];
 
     const categories = [
